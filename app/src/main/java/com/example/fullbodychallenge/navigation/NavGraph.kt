@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.fullbodychallenge.ui.screens.ExerciseCounterScreen
 import com.example.fullbodychallenge.ui.screens.HomeScreen
+import com.example.fullbodychallenge.ui.screens.RestDaysScreen
 import com.example.fullbodychallenge.ui.screens.SummaryScreen
 import com.example.fullbodychallenge.ui.screens.WorkoutListScreen
 import com.example.fullbodychallenge.viewmodel.WorkoutViewModel
@@ -16,6 +17,7 @@ private object Routes {
     const val WORKOUT_LIST = "workout_list"
     const val EXERCISE = "exercise/{exerciseId}"
     const val SUMMARY = "summary"
+    const val REST_DAYS = "rest_days"
     fun exercise(id: String) = "exercise/$id"
 }
 
@@ -27,7 +29,8 @@ fun AppNavGraph(viewModel: WorkoutViewModel) {
         composable(Routes.HOME) {
             HomeScreen(
                 viewModel = viewModel,
-                onStartWorkout = { navController.navigate(Routes.WORKOUT_LIST) }
+                onStartWorkout = { navController.navigate(Routes.WORKOUT_LIST) },
+                onManageRestDays = { navController.navigate(Routes.REST_DAYS) }
             )
         }
         composable(Routes.WORKOUT_LIST) {
@@ -52,6 +55,12 @@ fun AppNavGraph(viewModel: WorkoutViewModel) {
                 onDone = {
                     navController.popBackStack(Routes.HOME, inclusive = false)
                 }
+            )
+        }
+        composable(Routes.REST_DAYS) {
+            RestDaysScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
             )
         }
     }

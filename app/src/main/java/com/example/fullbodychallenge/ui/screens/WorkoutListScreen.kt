@@ -12,9 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.fullbodychallenge.ui.components.ExerciseAnimationView
 import com.example.fullbodychallenge.viewmodel.WorkoutViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +25,7 @@ fun WorkoutListScreen(
     onFinish: () -> Unit,
     onBack: () -> Unit
 ) {
-    val dayType by viewModel.selectedDayType.collectAsState()
+    val dayType by viewModel.todaysDayType.collectAsState()
     val difficulty by viewModel.difficulty.collectAsState()
     val progress by viewModel.progress.collectAsState()
     val exercises = viewModel.currentExercises()
@@ -33,7 +33,7 @@ fun WorkoutListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(dayType.displayName) },
+                title = { Text(dayType?.displayName ?: "Workout") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -67,6 +67,12 @@ fun WorkoutListScreen(
                 val done = progress[ex.id] ?: 0
                 val complete = done >= target
                 ListItem(
+                    leadingContent = {
+                        ExerciseAnimationView(
+                            style = ex.animation,
+                            modifier = Modifier.size(44.dp)
+                        )
+                    },
                     headlineContent = { Text(ex.nameForLevel(difficulty)) },
                     supportingContent = {
                         Text(

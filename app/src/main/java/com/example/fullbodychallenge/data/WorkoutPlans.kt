@@ -19,6 +19,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 12, 12, 15, 15),
+            animation = AnimationStyle.PUSH_UP,
             sets = 3,
             equipmentNote = "Level 1-2 use a wall or sturdy table edge"
         ),
@@ -33,6 +34,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(16, 10, 10, 12, 12),
+            animation = AnimationStyle.PUSH_UP,
             sets = 3,
             equipmentNote = "Level 4-5: feet on a step or sturdy chair"
         ),
@@ -47,6 +49,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(8, 10, 12, 12, 10),
+            animation = AnimationStyle.SQUAT_BOB,
             sets = 3,
             equipmentNote = "Needs a sturdy chair, step or low bench"
         ),
@@ -61,6 +64,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 25, 30, 40, 45),
+            animation = AnimationStyle.STATIC_HOLD,
             sets = 3
         )
     )
@@ -77,6 +81,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(8, 10, 12, 12, 15),
+            animation = AnimationStyle.SUPERMAN,
             sets = 3
         ),
         ExerciseTemplate(
@@ -90,6 +95,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 10, 10, 8, 8),
+            animation = AnimationStyle.ARM_RAISE,
             sets = 3
         ),
         ExerciseTemplate(
@@ -103,6 +109,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 12, 12, 10, 10),
+            animation = AnimationStyle.ROW_PULL,
             sets = 3,
             equipmentNote = "Optional: a towel looped around a sturdy door handle. No towel? Substitute extra Superman Rows."
         ),
@@ -117,6 +124,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 12, 12, 10, 10),
+            animation = AnimationStyle.ARM_RAISE,
             sets = 3
         )
     )
@@ -133,6 +141,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(12, 15, 18, 15, 15),
+            animation = AnimationStyle.SQUAT_BOB,
             sets = 3
         ),
         ExerciseTemplate(
@@ -146,6 +155,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(8, 10, 12, 12, 10),
+            animation = AnimationStyle.LUNGE_STEP,
             sets = 3,
             equipmentNote = "Reps count per leg"
         ),
@@ -160,6 +170,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(12, 12, 10, 10, 10),
+            animation = AnimationStyle.BRIDGE_LIFT,
             sets = 3
         ),
         ExerciseTemplate(
@@ -173,6 +184,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 30, 40, 45, 30),
+            animation = AnimationStyle.STATIC_HOLD,
             sets = 3
         )
     )
@@ -189,6 +201,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 25, 30, 35, 40),
+            animation = AnimationStyle.ARM_CIRCLE,
             sets = 2
         ),
         ExerciseTemplate(
@@ -202,6 +215,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(20, 12, 8, 10, 10),
+            animation = AnimationStyle.PUSH_UP,
             sets = 3
         ),
         ExerciseTemplate(
@@ -215,6 +229,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 12, 16, 20, 12),
+            animation = AnimationStyle.MOUNTAIN_CLIMBER,
             sets = 3
         ),
         ExerciseTemplate(
@@ -228,6 +243,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 25, 30, 30, 40),
+            animation = AnimationStyle.STATIC_HOLD,
             sets = 3
         )
     )
@@ -244,6 +260,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 30, 45, 40, 40),
+            animation = AnimationStyle.STATIC_HOLD,
             sets = 3
         ),
         ExerciseTemplate(
@@ -257,6 +274,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(10, 12, 12, 10, 12),
+            animation = AnimationStyle.LEG_RAISE,
             sets = 3
         ),
         ExerciseTemplate(
@@ -270,6 +288,7 @@ object WorkoutPlans {
             ),
             isTimed = false,
             targetPerLevel = listOf(16, 20, 20, 20, 24),
+            animation = AnimationStyle.TORSO_TWIST,
             sets = 3,
             equipmentNote = "Level 4: optional light book or water bottle in hands"
         ),
@@ -284,6 +303,7 @@ object WorkoutPlans {
             ),
             isTimed = true,
             targetPerLevel = listOf(20, 25, 30, 30, 40),
+            animation = AnimationStyle.MOUNTAIN_CLIMBER,
             sets = 3
         )
     )
@@ -296,17 +316,29 @@ object WorkoutPlans {
         DayType.CORE to core
     )
 
-    /** Suggests a day type from the current weekday, cycling through the 5 types. */
-    fun suggestedDayType(isoDayOfWeek: Int): DayType {
-        // isoDayOfWeek: 1=Monday .. 7=Sunday. Sat/Sun repeat Core & Legs as active recovery.
-        return when (isoDayOfWeek) {
-            1 -> DayType.PUSH
-            2 -> DayType.PULL
-            3 -> DayType.LEGS
-            4 -> DayType.SHOULDERS
-            5 -> DayType.CORE
-            6 -> DayType.LEGS
-            else -> DayType.CORE
+    /** Fixed order the 5-day split rotates through. */
+    private val rotation = listOf(DayType.PUSH, DayType.PULL, DayType.LEGS, DayType.SHOULDERS, DayType.CORE)
+
+    /** A stable reference date the rotation counts forward from. Arbitrary, just needs to never change. */
+    private val rotationAnchor: java.time.LocalDate = java.time.LocalDate.of(2025, 1, 1)
+
+    /**
+     * The day's assigned workout, or null if [date] is one of the user's chosen
+     * rest days. The 5-day split only advances on training days, so the
+     * PUSH -> PULL -> LEGS -> SHOULDERS -> CORE sequence keeps flowing correctly
+     * no matter which weekdays are marked as rest, or how many (0-2).
+     *
+     * @param restDays ISO day-of-week values (1=Monday .. 7=Sunday) the user has marked as rest.
+     */
+    fun workoutFor(date: java.time.LocalDate, restDays: Set<Int>): DayType? {
+        if (date.dayOfWeek.value in restDays) return null
+        var trainingDaysElapsed = 0
+        var cursor = rotationAnchor
+        while (!cursor.isAfter(date)) {
+            if (cursor.dayOfWeek.value !in restDays) trainingDaysElapsed++
+            cursor = cursor.plusDays(1)
         }
+        val index = (trainingDaysElapsed - 1).mod(rotation.size)
+        return rotation[index]
     }
 }

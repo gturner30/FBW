@@ -18,7 +18,7 @@ fun SummaryScreen(
     onDone: () -> Unit
 ) {
     val streak by viewModel.streak.collectAsState()
-    val dayType by viewModel.selectedDayType.collectAsState()
+    val dayType by viewModel.todaysDayType.collectAsState()
     val complete = viewModel.isWorkoutComplete()
 
     Column(
@@ -29,7 +29,7 @@ fun SummaryScreen(
         Text(if (complete) "🎉" else "💪", fontSize = 64.sp)
         Spacer(Modifier.height(16.dp))
         Text(
-            if (complete) "${dayType.displayName} complete!" else "Nice effort today",
+            if (complete) "${dayType?.displayName ?: "Workout"} complete!" else "Nice effort today",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )

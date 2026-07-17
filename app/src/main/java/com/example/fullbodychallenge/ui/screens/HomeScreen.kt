@@ -1,8 +1,6 @@
 package com.example.fullbodychallenge.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -11,17 +9,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.fullbodychallenge.data.DayType
 import com.example.fullbodychallenge.viewmodel.WorkoutViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: WorkoutViewModel,
-    onStartWorkout: () -> Unit
+    onStartWorkout: () -> Unit,
+    onManageRestDays: () -> Unit
 ) {
     val streak by viewModel.streak.collectAsState()
-    val selectedDay by viewModel.selectedDayType.collectAsState()
+    val todaysDayType by viewModel.todaysDayType.collectAsState()
     val difficulty by viewModel.difficulty.collectAsState()
 
     Column(
@@ -40,19 +38,37 @@ fun HomeScreen(
         )
 
         Spacer(Modifier.height(40.dp))
-        Text("Today's focus", style = MaterialTheme.typography.titleLarge)
-        Spacer(Modifier.height(12.dp))
-        LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            items(DayType.entries) { day ->
-                FilterChip(
-                    selected = day == selectedDay,
-                    onClick = { viewModel.selectDayType(day) },
-                    label = { Text(day.displayName) }
-                )
+
+        Card(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (todaysDayType != null) {
+                    Text("Today's Focus", style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
+                    Spacer(Modifier.height(4.dp))
+                    Text(todaysDayType!!.displayName, style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold)
+                } else {
+                    Text("😌", style = MaterialTheme.typography.headlineLarge)
+                    Spacer(Modifier.height(4.dp))
+                    Text("Rest Day", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Recovery is part of the program too.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    )
+                }
             }
         }
 
-        Spacer(Modifier.height(36.dp))
+        TextButton(onClick = onManageRestDays, modifier = Modifier.padding(top = 8.dp)) {
+            Text("Manage rest days")
+        }
+
+        Spacer(Modifier.height(28.dp))
         Text("Difficulty", style = MaterialTheme.typography.titleLarge)
         Spacer(Modifier.height(4.dp))
         Text(
@@ -73,13 +89,15 @@ fun HomeScreen(
 
         Spacer(Modifier.weight(1f))
 
-        Button(
-            onClick = onStartWorkout,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-        ) {
-            Text("Start Workout", style = MaterialTheme.typography.titleLarge)
+        if (todaysDayType != null) {
+            Button(
+                onClick = onStartWorkout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            ) {
+                Text("Start Workout", style = MaterialTheme.typography.titleLarge)
+            }
         }
         Spacer(Modifier.height(24.dp))
     }

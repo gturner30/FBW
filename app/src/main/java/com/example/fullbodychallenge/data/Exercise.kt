@@ -19,6 +19,7 @@ data class ExerciseTemplate(
     val variantNames: List<String>, // size 5, index 0 = level 1 ... index 4 = level 5
     val isTimed: Boolean,
     val targetPerLevel: List<Int>, // reps if !isTimed, seconds if isTimed. size 5
+    val animation: AnimationStyle,
     val sets: Int = 3,
     val equipmentNote: String? = null // e.g. "Optional: sturdy chair or step"
 ) {

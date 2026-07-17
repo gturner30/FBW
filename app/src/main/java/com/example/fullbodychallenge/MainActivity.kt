@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.fullbodychallenge.data.AppDatabase
+import com.example.fullbodychallenge.data.RestDayPreferences
 import com.example.fullbodychallenge.data.WorkoutRepository
 import com.example.fullbodychallenge.navigation.AppNavGraph
 import com.example.fullbodychallenge.ui.theme.FullBodyChallengeTheme
@@ -22,8 +23,12 @@ class MainActivity : ComponentActivity() {
         WorkoutRepository(AppDatabase.getInstance(applicationContext).workoutDao())
     }
 
+    private val restDayPreferences by lazy {
+        RestDayPreferences(applicationContext)
+    }
+
     private val viewModel: WorkoutViewModel by viewModels {
-        WorkoutViewModelFactory(repository)
+        WorkoutViewModelFactory(repository, restDayPreferences)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

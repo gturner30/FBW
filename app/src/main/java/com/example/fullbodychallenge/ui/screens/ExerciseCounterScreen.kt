@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.fullbodychallenge.data.ExerciseTemplate
 import com.example.fullbodychallenge.ui.components.CircularRepDial
 import com.example.fullbodychallenge.ui.components.CircularTimerRing
+import com.example.fullbodychallenge.ui.components.ExerciseAnimationView
 import com.example.fullbodychallenge.viewmodel.WorkoutViewModel
 import kotlinx.coroutines.delay
 
@@ -48,6 +49,12 @@ fun ExerciseCounterScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            ExerciseAnimationView(
+                style = exercise.animation,
+                modifier = Modifier.size(96.dp)
+            )
+            Spacer(Modifier.height(12.dp))
+
             exercise.equipmentNote?.let {
                 Text(
                     it,
